@@ -97,18 +97,25 @@ func (r *NamespaceScopeReconciler) Reconcile(req ctrl.Request) (ctrl.Result, err
 	klog.Infof("Reconciling NamespaceScope: %s", req.NamespacedName)
 
 	if err := r.UpdateStatus(instance); err != nil {
+		klog.Errorf("Failed to update the status of NamespaceScope %s: %v", req.NamespacedName, err)
+		klog.Error(err)
 		return ctrl.Result{}, err
 	}
 
 	if err := r.PushRbacToNamespace(instance); err != nil {
+		klog.Errorf("Failed to generate rbac: %v", err)
+		klog.Error(err)
 		return ctrl.Result{}, err
 	}
 
 	if err := r.DeleteRbacFromUnmanagedNamespace(instance); err != nil {
+		klog.Errorf("Failed to delete rbac: %v", err)
+		klog.Error(err)
 		return ctrl.Result{}, err
 	}
 
 	if err := r.UpdateConfigMap(instance); err != nil {
+		klog.Errorf("Failed to update configmap: %v", err)
 		return ctrl.Result{}, err
 	}
 

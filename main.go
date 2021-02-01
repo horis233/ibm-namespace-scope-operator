@@ -21,7 +21,6 @@ import (
 	"os"
 
 	corev1 "k8s.io/api/core/v1"
-	rbacv1 "k8s.io/api/rbac/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -61,9 +60,7 @@ func main() {
 	flag.Parse()
 
 	gvkLabelMap := map[schema.GroupVersionKind]cache.Selector{
-		corev1.SchemeGroupVersion.WithKind("ConfigMap"):   {LabelSelector: "managedby-namespace-scope"},
-		rbacv1.SchemeGroupVersion.WithKind("Role"):        {LabelSelector: "namespace-scope-configmap"},
-		rbacv1.SchemeGroupVersion.WithKind("RoleBinding"): {LabelSelector: "namespace-scope-configmap"},
+		corev1.SchemeGroupVersion.WithKind("ConfigMap"): {LabelSelector: "managedby-namespace-scope"},
 	}
 
 	operatorNs, err := util.GetOperatorNamespace()
